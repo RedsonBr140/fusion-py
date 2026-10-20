@@ -12,10 +12,19 @@ confirmados" no código são justamente isso.
 ## Instalação
 
 ```bash
+pip install fusiondms-client
+```
+
+O nome do pacote no PyPI é `fusiondms-client`, mas o import continua sendo
+`fusion` (ex.: `from fusion import FusionClient`).
+
+Enquanto não publicado, ou para acompanhar o `main` direto:
+
+```bash
 pip install git+ssh://git@github.com/RedsonBr140/fusion-py.git
 ```
 
-Ou, para desenvolvimento local lado a lado com outro projeto:
+Para desenvolvimento local lado a lado com outro projeto:
 
 ```bash
 pip install -e /caminho/para/fusion-py
