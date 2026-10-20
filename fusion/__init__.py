@@ -8,6 +8,8 @@ from fusion.models import (
     LoginResult,
     Motorista,
     MotoristasPage,
+    Veiculo,
+    VeiculosPage,
 )
 
 __all__ = [
@@ -18,6 +20,8 @@ __all__ = [
     "ClientesPage",
     "Motorista",
     "MotoristasPage",
+    "Veiculo",
+    "VeiculosPage",
     "LoginResult",
     "FusionError",
     "FusionAuthError",

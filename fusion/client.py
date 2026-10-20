@@ -6,10 +6,11 @@ import requests
 
 from fusion.config import FusionConfig
 from fusion.http import HttpSession
-from fusion.models import ClientesPage, Company, MotoristasPage
+from fusion.models import ClientesPage, Company, MotoristasPage, VeiculosPage
 from fusion.services.auth import AuthService
 from fusion.services.clientes import ClientesService
 from fusion.services.motoristas import MotoristasService
+from fusion.services.veiculos import VeiculosService
 
 
 class FusionClient:
@@ -21,6 +22,7 @@ class FusionClient:
         self._auth = AuthService(self._http)
         self._clientes = ClientesService(self._http)
         self._motoristas = MotoristasService(self._http)
+        self._veiculos = VeiculosService(self._http)
 
         self.company: Company | None = None
 
@@ -46,6 +48,11 @@ class FusionClient:
         self, campo: str, valor: str, *, page: int = 1, rows: int = 10
     ) -> MotoristasPage:
         return self._motoristas.buscar(campo, valor, page=page, rows=rows)
+
+    def buscar_veiculos(
+        self, campo: str = "", valor: str = "", *, page: int = 1, rows: int = 10
+    ) -> VeiculosPage:
+        return self._veiculos.buscar(campo, valor, page=page, rows=rows)
 
     def get(self, path: str, **kwargs) -> requests.Response:
         return self._http.get(path, **kwargs)

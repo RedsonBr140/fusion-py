@@ -20,6 +20,6 @@ class ClientesService:
     def buscar(self, campo: str, valor: str, *, page: int = 1, rows: int = 10) -> ClientesPage:
         total, rows_data = grid.search(
             self._http, GET_CLIENTES_PATH, campo, valor, page=page, rows=rows,
-            referer_menu=REFERER_MENU,
+            referer_menu=REFERER_MENU, params={"LGPD": 0},
         )
         return ClientesPage(total=total, rows=[Cliente.from_api(row) for row in rows_data])

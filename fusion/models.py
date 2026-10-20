@@ -108,5 +108,56 @@ class MotoristasPage:
     rows: list[Motorista]
 
 
+@dataclass(slots=True, frozen=True)
+class Veiculo:
+    id: str
+    codigo_erp: str
+    descricao: str
+    placa: str
+    status: str
+    modelo: str
+    ano_modelo: str
+    ano_fabricacao: str
+    km_atual: int | None
+    tipo_combustivel: str
+    proprio: bool
+    latitude: float | None
+    longitude: float | None
+    motorista_id: str | None
+    motorista_nome: str | None
+
+    @classmethod
+    def from_api(cls, data: dict) -> Veiculo:
+        # t96_* columns (tipo de veiculo join) are deliberately left out —
+        # out of scope for what we're building right now.
+        return cls(
+            id=data["t06_id"],
+            codigo_erp=data["t06_codigo_erp"],
+            descricao=data["t06_descricao"],
+            placa=data["t06_placa"],
+            status=data.get("t06_status") or "",
+            modelo=data.get("t06_modelo") or "",
+            ano_modelo=data.get("t06_anoModelo") or "",
+            ano_fabricacao=data.get("t06_anoFabricacao") or "",
+            km_atual=_to_int(data.get("t06_kmAtual")),
+            tipo_combustivel=data.get("t06_tipo_combustivel") or "",
+            proprio=data.get("t06_sn_proprio") == "S",
+            latitude=_to_float(data.get("t06_latitudeAtual")),
+            longitude=_to_float(data.get("t06_longitudeAtual")),
+            motorista_id=data.get("t05_id") or None,
+            motorista_nome=data.get("t05_nome") or None,
+        )
+
+
+@dataclass(slots=True, frozen=True)
+class VeiculosPage:
+    total: int
+    rows: list[Veiculo]
+
+
 def _to_float(value: str | None) -> float | None:
     return float(value) if value is not None else None
+
+
+def _to_int(value: str | None) -> int | None:
+    return int(value) if value is not None else None

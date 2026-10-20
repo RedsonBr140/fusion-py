@@ -48,7 +48,7 @@ others we haven't captured yet — rotas, filiais, veiculos, pedidos, ...)
 are backed by an endpoint shaped like:
 
 ```
-POST /php/cadastros/<entity>/get_<entities>.php?LGPD=0
+POST /php/cadastros/<entity>/get_<entities>.php[?LGPD=0]
 Content-Type: application/x-www-form-urlencoded
 X-Requested-With: XMLHttpRequest
 
@@ -78,6 +78,27 @@ Key things we've confirmed by testing live:
   so an unconfirmed guess at the right menu slug for a new entity
   (`cadmot` for drivers, etc.) is a reasonable placeholder — it's cosmetic,
   not a feature.
+- **`?LGPD=0` is not universal.** It's on the clients request (that screen
+  shows personal data) but absent entirely from the vehicles request —
+  don't assume it belongs on every grid call. `grid.search()` takes
+  `params` per-call for exactly this reason; pass what was actually
+  captured for that entity, not what another entity used. (The driver
+  service also sends it, but only by assumption — that one was never
+  independently confirmed, since we only captured its response, not its
+  request.)
+- Not every grid is filterable in practice: the vehicles capture used
+  empty `campo`/`valor` to list everything (`&page=1&rows=250`), so
+  `VeiculosService.buscar()` defaults both to `""` rather than requiring
+  a filter like the other entities do. No `CAMPO_*` constant exists for
+  vehicles yet because none was confirmed.
+- **Don't model every joined column.** A grid response is often a join of
+  several tables beyond the entity itself — e.g. the vehicles response
+  also carries `t96_*` columns (the vehicle-type/`tipo_veiculo` table) and
+  `t05_*` columns (the assigned driver). `Veiculo.from_api` deliberately
+  keeps the `t05_*` driver fields (useful, same entity relationship as
+  everywhere else) but drops `t96_*` entirely — vehicle types aren't part
+  of what we're building right now. If that becomes relevant later, it's
+  its own entity/service, not fields bolted onto `Veiculo`.
 
 ### Adding a new entity
 
@@ -107,6 +128,7 @@ were captured):
 | `/login.html` + `/php/util/login.php` | `auth.py` | n/a |
 | `/php/cadastros/cliente/get_clientes.php` | `clientes.py` | `t44_codigo_erp` |
 | `/php/cadastros/motorista/get_motoristas.php` | `motoristas.py` | `t05_nome`, `t05_codigo_erp` |
+| `/php/cadastros/transporte/get_transportes.php` | `veiculos.py` | none confirmed — list-all only |
 
 An earlier attempt added a client lookup against the documented
 `obtemDadosBiClientes` SOAP webservice (separate login/senha credentials,

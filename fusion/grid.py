@@ -17,6 +17,7 @@ def search(
     page: int,
     rows: int,
     referer_menu: str,
+    params: dict | None = None,
 ) -> tuple[int, list[dict]]:
     """POST to one of the Fusion portal's get_<entity>.php grid endpoints.
 
@@ -25,12 +26,16 @@ def search(
     screen's UI exposes), paginate with page/rows, and get back
     {"total": ..., "rows": [...]} — both come back null instead of 0/[] when
     there's no match.
+
+    `params` is per-entity, not shared: clients send `?LGPD=0` (that screen
+    shows personal data), vehicles send no query string at all. Pass what
+    was actually captured for the entity rather than assuming it's uniform.
     """
     logger.debug("Searching %s: %s=%s (page=%s, rows=%s)", path, campo, valor, page, rows)
 
     response = http.post(
         path,
-        params={"LGPD": 0},
+        params=params,
         data={"campo": campo, "valor": valor, "page": page, "rows": rows},
         headers={
             "Accept": "application/json, text/javascript, */*; q=0.01",
