@@ -39,7 +39,11 @@ class ClientesService:
         if "rows" not in data:
             raise FusionError(f"Unexpected get_clientes response: {data}")
 
+        # A no-match search returns total/rows as null rather than 0/[].
+        total = data.get("total")
+        rows = data.get("rows") or []
+
         return ClientesPage(
-            total=int(data.get("total", 0)),
-            rows=[Cliente.from_api(row) for row in data["rows"]],
+            total=int(total) if total is not None else 0,
+            rows=[Cliente.from_api(row) for row in rows],
         )

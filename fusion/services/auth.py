@@ -54,10 +54,13 @@ class AuthService:
         if not data.get("success"):
             raise FusionAuthError(f"Login failed: {data}")
 
+        # Not every portal instance returns all three fields (e.g. cnpj can be
+        # absent), so fall back to empty rather than letting a missing field
+        # take down the whole login — the caller still gets a valid token.
         company = Company(
-            codigo=data["sis04_codigo"],
-            fantasia=data["fantasia"],
-            cnpj=data["cnpj"],
+            codigo=data.get("sis04_codigo") or "",
+            fantasia=data.get("fantasia") or "",
+            cnpj=data.get("cnpj") or "",
         )
         logger.info("Login completed — %s", company.fantasia)
 

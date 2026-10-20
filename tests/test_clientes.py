@@ -64,3 +64,14 @@ def test_buscar_clientes_raises_on_unexpected_response(requests_mock, tmp_path):
 
     with pytest.raises(FusionError):
         client.buscar_clientes(CAMPO_CODIGO_ERP, "73967")
+
+
+def test_buscar_clientes_handles_null_total_and_rows_on_no_match(requests_mock, tmp_path):
+    client = FusionClient(tmp_path / "downloads")
+    url = f"{client._http.config.base_url}{GET_CLIENTES_PATH}"
+    requests_mock.post(url, json={"total": None, "rows": None})
+
+    page = client.buscar_clientes(CAMPO_CODIGO_ERP, "does-not-exist")
+
+    assert page.total == 0
+    assert page.rows == []
