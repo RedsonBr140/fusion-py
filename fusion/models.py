@@ -21,7 +21,7 @@ class Cliente:
     id: str
     codigo_erp: str
     cnpj: str
-    fantasia: str
+    fantasia: str | None
     razao_social: str
     endereco: str
     numero_endereco: str
@@ -42,7 +42,7 @@ class Cliente:
             id=data["t16_id"],
             codigo_erp=data["t44_codigo_erp"],
             cnpj=data["t16_cnpjCliente"],
-            fantasia=data["t16_fantasia"],
+            fantasia=data["t16_fantasia"] or None,
             razao_social=data["t16_razSocial"],
             endereco=data["t16_endereco"],
             numero_endereco=data["t16_numero_endereco"],

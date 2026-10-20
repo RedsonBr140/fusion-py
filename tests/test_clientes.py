@@ -41,6 +41,7 @@ def test_buscar_clientes_parses_rows(requests_mock, tmp_path):
     assert cliente.razao_social == "ACME LTDA"
     assert cliente.latitude == pytest.approx(-8.0476)
     assert cliente.ativo is True
+    assert cliente.fantasia is None
     assert cliente.email is None
 
 
