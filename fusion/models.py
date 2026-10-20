@@ -65,5 +65,48 @@ class ClientesPage:
     rows: list[Cliente]
 
 
+@dataclass(slots=True, frozen=True)
+class Motorista:
+    id: str
+    codigo_erp: str
+    nome: str
+    cpf: str
+    telefone: str | None
+    endereco: str
+    uf: str
+    cidade: str
+    cep: str
+    latitude: float | None
+    longitude: float | None
+    status: str
+    tipo: str
+    email: str | None
+
+    @classmethod
+    def from_api(cls, data: dict) -> Motorista:
+        return cls(
+            id=data["t05_id"],
+            codigo_erp=data["t05_codigo_erp"],
+            nome=data["t05_nome"],
+            cpf=data["t05_cpf"],
+            telefone=data.get("t05_telefone") or None,
+            endereco=data["t05_endereco"],
+            uf=data["t05_uf"],
+            cidade=data["t05_cidade"],
+            cep=data["t05_cep"],
+            latitude=_to_float(data.get("t05_latitude")),
+            longitude=_to_float(data.get("t05_longitude")),
+            status=data.get("t05_status") or "",
+            tipo=data.get("t05_tipo") or "",
+            email=data.get("t05_email") or None,
+        )
+
+
+@dataclass(slots=True, frozen=True)
+class MotoristasPage:
+    total: int
+    rows: list[Motorista]
+
+
 def _to_float(value: str | None) -> float | None:
     return float(value) if value is not None else None
