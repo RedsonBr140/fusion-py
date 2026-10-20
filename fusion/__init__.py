@@ -1,5 +1,14 @@
 from fusion.client import FusionClient
-from fusion.company import Company
-from fusion.exceptions import FusionAuthError, FusionError
+from fusion.config import FusionConfig
+from fusion.exceptions import FusionAuthError, FusionError, FusionHTTPError
+from fusion.models import Company, LoginResult
 
-__all__ = ["FusionClient", "Company", "FusionAuthError", "FusionError"]
+__all__ = [
+    "FusionClient",
+    "FusionConfig",
+    "Company",
+    "LoginResult",
+    "FusionError",
+    "FusionAuthError",
+    "FusionHTTPError",
+]
